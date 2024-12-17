@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+
+class TaskPage extends StatelessWidget {
+  final Task task = Task(); // Assuming Task is a class managing your task list
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Task Manager'),
+      ),
+      body: Center(child: Text('Tasks will be listed here')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          String taskTitle = 'Task to add'; 
+
+          // Show the dialog
+          await showDialog<String>(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Add New Task'),
+                content: TextField(
+                  autofocus: true,
+                  onChanged: (text) {
+                    taskTitle = text; // Update taskTitle as user types
+                  },
+                  decoration: const InputDecoration(hintText: 'Enter task name'),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (taskTitle.isNotEmpty) {
+                        task.addTask(taskTitle);
+                        Navigator.of(context).pop(); // Close the dialog
+                      } else {
+              
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Please enter a task name')),
+                        );
+                      }
+                    },
+                    child: const Text('Add Task'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        tooltip: 'Add Task',
+        child: const Icon(Icons.add),
+      ),
+
+      //upper
+    );
+  }
+}
+
+// Example Task class for managing tasks (implement as needed)
+class Task {
+  void addTask(String taskName) {
+    // Logic to add task (e.g., to a list or database)
+    print('Task added: $taskName');
+  }
+}
